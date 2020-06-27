@@ -11,6 +11,7 @@ class Nr600DataExtractor:
     def __init__(self, filename):
         # ファイル名
         self.filename = filename
+        self.save_filename = "resutl_" + filename
         # データ取得用
         self.data_a = np.arange(0)
         self.data_b = np.arange(0)
@@ -56,26 +57,26 @@ class Nr600DataExtractor:
                     # 終了時間を取得
                     self.data_end = temp_line.split(",")[0]
         # データ数を取得する
-        temp_ax = self.data_a.shape[0]+1
-        temp_bx = self.data_b.shape[0]+1
+        temp_ax = self.data_a.shape[0] + 1
+        temp_bx = self.data_b.shape[0] + 1
         self.data_ax = np.arange(1, temp_ax)
         self.data_bx = np.arange(1, temp_bx)
         # 両者のデータが同じかどうかを確認する
         if temp_ax == temp_bx:
             return(True)
         else:
+            self.save_filename = ""
             return(False)
 
     def formatter_data(self):
-        temp_filename = "resutl_"+self.filename
-        np.savetxt(temp_filename, np.array([self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
+        np.savetxt(self.save_filename, np.array([self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
 
     def plot_data(self):
         # Figureオブジェクトを作成
         # ウインドウサイズを指定(横×縦)
         fig = figure(figsize=(8, 4))
         # 描画タイトルを表示
-        fig.suptitle(self.data_start+" -> "+self.data_end, fontweight="bold")
+        fig.suptitle(self.save_filename + "\n" + self.data_start + " -> " + self.data_end, fontweight="bold")
         # figに属するAxesオブジェクトを作成
         ax = fig.add_subplot(1, 1, 1)
         # 折れ線グラフをプロット
@@ -109,6 +110,7 @@ def main():
             d.plot_data()
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()
