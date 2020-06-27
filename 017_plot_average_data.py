@@ -74,7 +74,7 @@ class Nr600DataExtractor:
     def plot_data(self):
         # Figureオブジェクトを作成
         # ウインドウサイズを指定(横×縦)
-        fig = figure(figsize=(8, 4))
+        fig = figure(figsize=(8, 6))
         # 描画タイトルを表示
         fig.suptitle(self.save_filename + "\n" + self.data_start + " -> " + self.data_end, fontweight="bold")
         # figに属するAxesオブジェクトを作成
@@ -89,7 +89,7 @@ class Nr600DataExtractor:
         # x範囲
         ax.set_xlim(left=1)
         # y範囲
-        ax.set_ylim(bottom=-1, top=2)
+        ax.set_ylim(bottom=-2, top=2)
         # X軸のラベル
         ax.set_xlabel("count number")
         # Y軸のラベル
