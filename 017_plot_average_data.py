@@ -65,7 +65,7 @@ class Nr600DataExtractor:
         if temp_ax == temp_bx:
             return(True)
         else:
-            self.save_filename = ""
+            self.save_filename = "Can't create file because of unmatch number"
             return(False)
 
     def formatter_data(self):
