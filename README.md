@@ -16,3 +16,4 @@ Python Library
   * statistics
   * matplotlib
   * glob
+  * os
