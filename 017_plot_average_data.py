@@ -4,6 +4,7 @@ import statistics
 from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 
+import os
 import glob
 
 
@@ -63,7 +64,11 @@ class Nr600DataExtractor:
         self.data_bx = np.arange(1, temp_bx)
         # 両者のデータが同じかどうかを確認する
         if temp_ax == temp_bx:
-            return(True)
+            if (os.path.exists(self.save_filename) is True):
+                self.save_filename = "result file already exists"
+                return(False)
+            else:
+                return(True)
         else:
             self.save_filename = "Can't create file because of unmatch number"
             return(False)
@@ -106,7 +111,7 @@ def main():
             if d.median_data() is True:
                 d.formatter_data()
             else:
-                print("両者のデータが異なるでファイル保存は行いません")
+                print("結果ファイルが存在する、もしくは両者のデータが異なるでファイル保存は行いません")
             d.plot_data()
 
     plt.show()
