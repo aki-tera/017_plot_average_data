@@ -111,7 +111,8 @@ def main():
             if d.median_data() is True:
                 d.formatter_data()
             else:
-                print("結果ファイルが存在する、もしくは両者のデータが異なるでファイル保存は行いません")
+                print("結果ファイルが存在する、もしくは両者のデータが異なるで"
+                      "ファイル保存は行いません")
             d.plot_data()
 
     plt.show()
