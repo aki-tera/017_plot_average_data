@@ -85,8 +85,8 @@ class Nr600DataExtractor:
         # figに属するAxesオブジェクトを作成
         ax = fig.add_subplot(1, 1, 1)
         # 折れ線グラフをプロット
-        ax.plot(self.data_ax, self.data_a)
-        ax.plot(self.data_bx, self.data_b)
+        ax.scatter(self.data_ax, self.data_a, s=1)
+        ax.scatter(self.data_bx, self.data_b, s=1)
         # 凡例を表示
         ax.legend(["Z1", "Z2"], loc="best", fontsize=8)
         # grid表示ON
