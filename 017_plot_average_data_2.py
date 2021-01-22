@@ -8,7 +8,7 @@ import os
 import glob
 
 
-class Nr600DataExtractor:
+class Gl220DataExtractor:
     def __init__(self, filename):
         # ファイル名
         self.filename = filename
@@ -108,7 +108,7 @@ def main():
         if row[:7] == "resutl_":
             pass
         else:
-            d = Nr600DataExtractor(row)
+            d = Gl220DataExtractor(row)
             if d.median_data() is True:
                 d.formatter_data()
             else:
