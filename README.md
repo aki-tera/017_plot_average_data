@@ -14,7 +14,7 @@ You can create graphs and result's csv files from original csv files.
 - You get the median of each from the ranges which you want for each period.
 - You can change the settings according to the logger type in original csv files.
 ### original csv files
-- You should assume file(s) which output from a logger.
+- You should assume files which output from a logger.
 - The files must contain the date(yyyy/mm/dd), data1, data2.
 - The data must have stable data for a certain period.
 ### output data
@@ -39,7 +39,7 @@ Python Library
 1. Run this program.
 1. Display graphs plotting the median.
 1. And then generate result's csv files.  
-   But it will not be generated if results already exists.
+   Note:It is not generated if results already exists.
 ## Note
 Nothing in particular
 
