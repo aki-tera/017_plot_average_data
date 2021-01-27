@@ -23,7 +23,7 @@ class Nr600DataExtractor:
 
     def median_data(self):
         # 日付のチェック用
-        check_code = re.compile("[0-9]{4}/[0-9]{2}/[0-9]{2}")
+        check_code = re.compile("[ 0-9]*,*[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}")
         # 中央値の取得
         z1_mid = []
         z2_mid = []
@@ -41,7 +41,8 @@ class Nr600DataExtractor:
                         z1_mid.append(temp_z1)
                     elif temp_z1 > 5 and z1_mid != []:
                         # Z1データの中央値をnumpy配列の代入
-                        self.data_a = np.append(self.data_a, statistics.median(z1_mid))
+                        self.data_a = np.append(
+                            self.data_a, statistics.median(z1_mid))
                         z1_mid = []
                     # Z2の中央値を取得する
                     if temp_z2 < 5 and z2_mid == []:
@@ -50,7 +51,8 @@ class Nr600DataExtractor:
                         z2_mid.append(temp_z2)
                     elif temp_z2 > 5 and z2_mid != []:
                         # Z1データの中央値をnumpy配列の代入
-                        self.data_b = np.append(self.data_b, statistics.median(z2_mid))
+                        self.data_b = np.append(
+                            self.data_b, statistics.median(z2_mid))
                         z2_mid = []
                     # 開始時間を取得
                     if self.data_start == "":
@@ -74,14 +76,21 @@ class Nr600DataExtractor:
             return(False)
 
     def formatter_data(self):
-        np.savetxt(self.save_filename, np.array([self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
+        np.savetxt(self.save_filename, np.array(
+            [self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
 
     def plot_data(self):
         # Figureオブジェクトを作成
         # ウインドウサイズを指定(横×縦)
         fig = figure(figsize=(8, 6))
         # 描画タイトルを表示
-        fig.suptitle(self.save_filename + "\n" + self.data_start + " -> " + self.data_end, fontweight="bold")
+        fig.suptitle(
+            self.save_filename +
+            "\n" +
+            self.data_start +
+            " -> " +
+            self.data_end,
+            fontweight="bold")
         # figに属するAxesオブジェクトを作成
         ax = fig.add_subplot(1, 1, 1)
         # 折れ線グラフをプロット

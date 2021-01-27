@@ -24,7 +24,7 @@ class Gl220DataExtractor:
     def median_data(self):
         # 日付のチェック用
         check_code = re.compile(
-            "^[ ]*[0-9]{1,5},[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}")
+            "[ 0-9]*,*[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}")
         # 中央値の取得
         z1_mid = []
         z2_mid = []
