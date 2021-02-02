@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 
-import PADSet
+import json
 
 
 class DataExtractor:
@@ -23,17 +23,22 @@ class DataExtractor:
         self.data_start = ""
         self.data_end = ""
 
+        # パラメータの取り出し
+        DESetting = open("setting.json", "r")
+        DEDict = json.load(DESetting)
+
         # 対象ファイルの型式を取得する
         with open(self.filename) as f:
             for i, temp_line in enumerate(f):
                 if i < 5:
-                    for dic_temp in PADSet.setting.keys():
+                    for dic_temp in DEDict.keys():
                         if dic_temp in temp_line:
-                            self.DEHigh = PADSet.setting[dic_temp]["high"]
-                            self.DELow = PADSet.setting[dic_temp]["low"]
-                            self.DETime = PADSet.setting[dic_temp]["time"]
-                            self.DEZ1 = PADSet.setting[dic_temp]["z1"]
-                            self.DEZ2 = PADSet.setting[dic_temp]["z2"]
+                            # 辞書から取り出したパラメータをセットする
+                            self.DEHigh = DEDict[dic_temp]["high"]
+                            self.DELow = DEDict[dic_temp]["low"]
+                            self.DETime = DEDict[dic_temp]["time"]
+                            self.DEZ1 = DEDict[dic_temp]["z1"]
+                            self.DEZ2 = DEDict[dic_temp]["z2"]
                             print(
                                 "Type:{0}  File:{1}".format(
                                     dic_temp, self.filename))
