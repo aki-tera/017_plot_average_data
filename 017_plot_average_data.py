@@ -23,45 +23,60 @@ class DataExtractor:
         self.data_start = ""
         self.data_end = ""
 
+        # 対象ファイルの型式を取得する
+        with open(self.filename) as f:
+            for i, temp_line in enumerate(f):
+                if i < 5:
+                    for dic_temp in PADSet.setting.keys():
+                        if dic_temp in temp_line:
+                            self.DEHigh = PADSet.setting[dic_temp]["high"]
+                            self.DELow = PADSet.setting[dic_temp]["low"]
+                            self.DETime = PADSet.setting[dic_temp]["time"]
+                            self.DEZ1 = PADSet.setting[dic_temp]["z1"]
+                            self.DEZ2 = PADSet.setting[dic_temp]["z2"]
+                            print(
+                                "Type:{0}  File:{1}".format(
+                                    dic_temp, self.filename))
+                            break
+
     def median_data(self):
-        print(PADSet.setting)
         # 日付のチェック用
-        check_code = re.compile("[0-9]{4}/[0-9]{2}/[0-9]{2}")
+        check_code = re.compile("[ 0-9]*,*[0-9]{4}/[0-9]{1,2}/[0-9]{1,2}")
         # 中央値の取得
         z1_mid = []
         z2_mid = []
-        # ファイルからデータを取得する
+        # ファイルから型式とデータを取得する
         with open(self.filename) as f:
             for temp_line in f:
                 # 日付のあるデータのみ抽出する
                 if re.match(check_code, temp_line) is not None:
-                    temp_z1 = float(temp_line.split(",")[2])
-                    temp_z2 = float(temp_line.split(",")[3])
+                    temp_z1 = float(temp_line.split(",")[self.DEZ1])
+                    temp_z2 = float(temp_line.split(",")[self.DEZ2])
                     # Z1の中央値を取得する
-                    if temp_z1 < 5 and z1_mid == []:
+                    if self.DELow < temp_z1 < self.DEHigh and z1_mid == []:
                         z1_mid = [temp_z1]
-                    elif temp_z1 < 5 and z1_mid != []:
+                    elif self.DELow < temp_z1 < self.DEHigh and z1_mid != []:
                         z1_mid.append(temp_z1)
-                    elif temp_z1 > 5 and z1_mid != []:
+                    elif not(self.DELow < temp_z1 < self.DEHigh) and z1_mid != []:
                         # Z1データの中央値をnumpy配列の代入
                         self.data_a = np.append(
                             self.data_a, statistics.median(z1_mid))
                         z1_mid = []
                     # Z2の中央値を取得する
-                    if temp_z2 < 5 and z2_mid == []:
+                    if self.DELow < temp_z2 < self.DEHigh and z2_mid == []:
                         z2_mid = [temp_z2]
-                    elif temp_z2 < 5 and z2_mid != []:
+                    elif self.DELow < temp_z2 < self.DEHigh and z2_mid != []:
                         z2_mid.append(temp_z2)
-                    elif temp_z2 > 5 and z2_mid != []:
+                    elif not(self.DELow < temp_z2 < self.DEHigh) and z2_mid != []:
                         # Z1データの中央値をnumpy配列の代入
                         self.data_b = np.append(
                             self.data_b, statistics.median(z2_mid))
                         z2_mid = []
                     # 開始時間を取得
                     if self.data_start == "":
-                        self.data_start = temp_line.split(",")[0]
+                        self.data_start = temp_line.split(",")[self.DETime]
                     # 終了時間を取得
-                    self.data_end = temp_line.split(",")[0]
+                    self.data_end = temp_line.split(",")[self.DETime]
         # データ数を取得する
         temp_ax = self.data_a.shape[0] + 1
         temp_bx = self.data_b.shape[0] + 1
@@ -114,7 +129,6 @@ class DataExtractor:
 
 
 def main():
-    print(PADSet.setting)
     filename = glob.glob("*.csv")
     for row in filename:
         if row[:7] == "resutl_":
