@@ -103,6 +103,8 @@ class DataExtractor:
             [self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
 
     def plot_data(self):
+        # 日本語フォント
+        jp_font = "Meiryo"
         # Figureオブジェクトを作成
         # ウインドウサイズを指定(横×縦)
         fig = figure(figsize=(8, 6))
@@ -113,7 +115,7 @@ class DataExtractor:
             self.data_start +
             " -> " +
             self.data_end,
-            fontweight="bold")
+            fontweight="bold", fontname=jp_font)
         # figに属するAxesオブジェクトを作成
         ax = fig.add_subplot(1, 1, 1)
         # 折れ線グラフをプロット
