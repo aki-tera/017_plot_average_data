@@ -12,7 +12,7 @@
 You can create graphs and result's csv files from original csv files.
 
 ### specification
-- You get the median of each from the ranges which you want for each period.
+- You get the median of each from the ranges which you want between high and low.
 - You can change the settings according to the logger type in original csv files.
 ### original csv files
 - You should assume files which output from a logger.
