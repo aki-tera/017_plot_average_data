@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 import os
 import glob
 
+# 日本語フォント設定
+from matplotlib import rc
+jp_font = "Yu Gothic"
+rc('font', family=jp_font)
+
 
 class Gl220DataExtractor:
     def __init__(self, filename):
@@ -33,9 +38,20 @@ class Gl220DataExtractor:
             for temp_line in f:
                 # 日付のあるデータのみ抽出する
                 if re.match(check_code, temp_line) is not None:
-                    temp_z1 = float(temp_line.split(",")[3])
-                    temp_z2 = float(temp_line.split(",")[4])
+                    # 結果が【-------】の場合は、-6に変換する
+                    temp_z1 = temp_line.split(",")[3]
+                    temp_z2 = temp_line.split(",")[4]
+                    if temp_z1 == "-------":
+                        temp_z1 = -5.0
+                    else:
+                        temp_z1 = float(temp_z1)
+                    if temp_z2 == "-------":
+                        temp_z2 = -5.0
+                    else:
+                        temp_z2 = float(temp_z2)
+
                     # Z1の中央値を取得する
+                    # -2より大きい数値の中央値とする
                     if temp_z1 > -2 and z1_mid == []:
                         z1_mid = [temp_z1]
                     elif temp_z1 > -2 and z1_mid != []:
@@ -45,6 +61,7 @@ class Gl220DataExtractor:
                         self.data_a = np.append(
                             self.data_a, statistics.median(z1_mid))
                         z1_mid = []
+
                     # Z2の中央値を取得する
                     if temp_z2 > -2 and z2_mid == []:
                         z2_mid = [temp_z2]
@@ -55,6 +72,7 @@ class Gl220DataExtractor:
                         self.data_b = np.append(
                             self.data_b, statistics.median(z2_mid))
                         z2_mid = []
+
                     # 開始時間を取得
                     if self.data_start == "":
                         self.data_start = temp_line.split(",")[1]
@@ -69,12 +87,12 @@ class Gl220DataExtractor:
         # 両者のデータが同じかどうかを確認する
         if temp_ax == temp_bx:
             if (os.path.exists(self.save_filename) is True):
-                self.save_filename = "result file already exists"
+                self.save_filename = "結果のファイルはすでにあります"
                 return(False)
             else:
                 return(True)
         else:
-            self.save_filename = "Can't create file because of unmatch number"
+            self.save_filename = "Z1とZ2は、結果の数が異なるのでファイルは作成しません"
             return(False)
 
     def formatter_data(self):
@@ -95,9 +113,10 @@ class Gl220DataExtractor:
             fontweight="bold")
         # figに属するAxesオブジェクトを作成
         ax = fig.add_subplot(1, 1, 1)
-        # 折れ線グラフをプロット
-        ax.scatter(self.data_ax, self.data_a, s=1)
-        ax.scatter(self.data_bx, self.data_b, s=1)
+        # 散布図をプロット
+        # sはプロットする点の大きさ
+        ax.scatter(self.data_ax, self.data_a, s=5)
+        ax.scatter(self.data_bx, self.data_b, s=5)
         # 凡例を表示
         ax.legend(["Z1", "Z2"], loc="best", fontsize=8)
         # grid表示ON
@@ -126,7 +145,7 @@ def main():
                       "ファイル保存は行いません")
             d.plot_data()
 
-    # plt.show()
+    #plt.show()
 
 
 if __name__ == "__main__":
