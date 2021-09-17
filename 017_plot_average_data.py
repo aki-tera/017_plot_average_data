@@ -9,6 +9,11 @@ import glob
 
 import json
 
+# 日本語フォント設定
+from matplotlib import rc
+jp_font = "Yu Gothic"
+rc('font', family=jp_font)
+
 
 class DataExtractor:
     def __init__(self, filename):
@@ -103,8 +108,6 @@ class DataExtractor:
             [self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
 
     def plot_data(self):
-        # 日本語フォント
-        jp_font = "Meiryo"
         # Figureオブジェクトを作成
         # ウインドウサイズを指定(横×縦)
         fig = figure(figsize=(8, 6))

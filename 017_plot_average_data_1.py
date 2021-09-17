@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 import os
 import glob
 
+# 日本語フォント設定
+from matplotlib import rc
+jp_font = "Yu Gothic"
+rc('font', family=jp_font)
+
 
 class Nr600DataExtractor:
     def __init__(self, filename):
