@@ -38,36 +38,34 @@ class Gl220DataExtractor:
             for temp_line in f:
                 # 日付のあるデータのみ抽出する
                 if re.match(check_code, temp_line) is not None:
-                    # 結果が【-------】の場合は、-6に変換する
-                    temp_z1 = temp_line.split(",")[3]
-                    temp_z2 = temp_line.split(",")[4]
-                    if temp_z1 == "-------":
-                        temp_z1 = -5.0
-                    else:
-                        temp_z1 = float(temp_z1)
-                    if temp_z2 == "-------":
-                        temp_z2 = -5.0
-                    else:
-                        temp_z2 = float(temp_z2)
-
+                    # 文字の場合、非数（nan）にして処理を続ける
+                    try:
+                        temp_z1 = float(temp_line.split(",")[3])
+                    except ValueError:
+                        temp_z1 = np.nan
+                    try:
+                        temp_z2 = float(temp_line.split(",")[4])
+                    except ValueError:
+                        temp_z2 = np.nan
+   
                     # Z1の中央値を取得する
                     # -2より大きい数値の中央値とする
-                    if temp_z1 > -2 and z1_mid == []:
+                    if -3 < temp_z1 < 10 and z1_mid == []:
                         z1_mid = [temp_z1]
-                    elif temp_z1 > -2 and z1_mid != []:
+                    elif -3 < temp_z1 < 10 and z1_mid != []:
                         z1_mid.append(temp_z1)
-                    elif temp_z1 < -2 and z1_mid != []:
+                    elif not(-3 < temp_z1 < 10) and z1_mid != []:
                         # Z1データの中央値をnumpy配列の代入
                         self.data_a = np.append(
                             self.data_a, statistics.median(z1_mid))
                         z1_mid = []
 
                     # Z2の中央値を取得する
-                    if temp_z2 > -2 and z2_mid == []:
+                    if -3 < temp_z2 < 10 and z2_mid == []:
                         z2_mid = [temp_z2]
-                    elif temp_z2 > -2 and z2_mid != []:
+                    elif -3 < temp_z2 < 10 and z2_mid != []:
                         z2_mid.append(temp_z2)
-                    elif temp_z2 < -2 and z2_mid != []:
+                    elif not(-3 < temp_z2 < 10) and z2_mid != []:
                         # Z1データの中央値をnumpy配列の代入
                         self.data_b = np.append(
                             self.data_b, statistics.median(z2_mid))
@@ -80,10 +78,12 @@ class Gl220DataExtractor:
                         # 終わりが分からないので常時記録する
                         self.data_end = temp_line.split(",")[1]
         # データ数を取得する
+        
         temp_ax = self.data_a.shape[0] + 1
         temp_bx = self.data_b.shape[0] + 1
         self.data_ax = np.arange(1, temp_ax)
         self.data_bx = np.arange(1, temp_bx)
+      
         # 両者のデータが同じかどうかを確認する
         if temp_ax == temp_bx:
             if (os.path.exists(self.save_filename) is True):
@@ -145,7 +145,7 @@ def main():
                       "ファイル保存は行いません")
             d.plot_data()
 
-    #plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":

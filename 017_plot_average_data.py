@@ -60,8 +60,15 @@ class DataExtractor:
             for temp_line in f:
                 # 日付のあるデータのみ抽出する
                 if re.match(check_code, temp_line) is not None:
-                    temp_z1 = float(temp_line.split(",")[self.DEZ1])
-                    temp_z2 = float(temp_line.split(",")[self.DEZ2])
+                    # 文字の場合、非数（nan）にして処理を続ける
+                    try:
+                        temp_z1 = float(temp_line.split(",")[self.DEZ1])
+                    except ValueError:
+                        temp_z1 = np.nan
+                    try:
+                        temp_z2 = float(temp_line.split(",")[self.DEZ2])
+                    except ValueError:
+                        temp_z2 = np.nan
                     # Z1の中央値を取得する
                     if self.DELow < temp_z1 < self.DEHigh and z1_mid == []:
                         z1_mid = [temp_z1]
@@ -72,6 +79,7 @@ class DataExtractor:
                         self.data_a = np.append(
                             self.data_a, statistics.median(z1_mid))
                         z1_mid = []
+                        
                     # Z2の中央値を取得する
                     if self.DELow < temp_z2 < self.DEHigh and z2_mid == []:
                         z2_mid = [temp_z2]
