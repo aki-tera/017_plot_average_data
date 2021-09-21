@@ -78,7 +78,6 @@ class Gl220DataExtractor:
                         # 終わりが分からないので常時記録する
                         self.data_end = temp_line.split(",")[1]
         # データ数を取得する
-        
         temp_ax = self.data_a.shape[0] + 1
         temp_bx = self.data_b.shape[0] + 1
         self.data_ax = np.arange(1, temp_ax)
@@ -96,8 +95,9 @@ class Gl220DataExtractor:
             return(False)
 
     def formatter_data(self):
+        # 転置して出力するように変更
         np.savetxt(self.save_filename, np.array(
-            [self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
+            [self.data_a, self.data_b]).T, fmt="%.4f", delimiter=",")
 
     def plot_data(self):
         # Figureオブジェクトを作成
