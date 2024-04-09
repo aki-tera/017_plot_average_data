@@ -114,20 +114,21 @@ class DataExtractor:
             return(False)
 
     def formatter_data(self):
-        #np.savetxt(self.save_filename, np.array(
-        #    [self.data_a, self.data_b]), fmt="%.4f", delimiter=",")
-        # csvファイルを書き込む
-
         result_data = np.array([self.data_a, self.data_b])
         with open(self.save_filename, "w", newline="\n") as csvfile:
             writer = csv.writer(csvfile)
             
             # 列ごとにデータを保存する
-            for i in range(0, result_data.shape[1], 10000):  # 8列ごとにデータを取得
-                for j in range(result_data.shape[0]):  # 行の数だけ繰り返す
-                    row_data = result_data[j, i:i+10000].tolist()  # フラットなデータを取得し、リストに変換
-                    writer.writerow(row_data)  # 行ごとにデータを書き込む
-                writer.writerow([])  # 空行を挿入することで改行を作成
+            # 10000列ごとにデータを取得
+            for i in range(0, result_data.shape[1], 10000):
+                # 行の数だけ繰り返す
+                for j in range(result_data.shape[0]):
+                    # フラットなデータを取得し、リストに変換
+                    result_row = result_data[j, i:i+10000].tolist()
+                    # 行ごとにデータを書き込む
+                    writer.writerow(result_row)
+                # 空行を挿入することで改行を作成
+                writer.writerow([])
 
     def plot_data(self):
         # Figureオブジェクトを作成
